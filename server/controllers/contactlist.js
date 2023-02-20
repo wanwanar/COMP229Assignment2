@@ -10,6 +10,17 @@ let jwt = require('jsonwebtoken');
 let ContactList = require('../model/contact');
 
 module.exports.displayContactList = (req, res, next) => {
+    if(!req.user)
+    {
+        res.render('auth/login',
+        {
+            title: "Login",
+            messages:req.flash('loginMessage'),
+            displayName:req.user?req.user.displayName:''
+        })
+    }
+    else
+    {
     ContactList.find().sort({ name: 1 }).exec((err, contactList) => {
         if(err)
         {
@@ -25,6 +36,7 @@ module.exports.displayContactList = (req, res, next) => {
             displayName: req.user ? req.user.displayName : ''});      
         }
     });
+    }
 }
 
 module.exports.displayAddPage = (req, res, next) => {
